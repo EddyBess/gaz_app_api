@@ -21,13 +21,15 @@ class GetStationData(APIView):
         # Forced to split the string like this due to format issues 
         where_string = "within_distance(geom,GEOM'"
         where_string = where_string + '{"type":"Point","coordinates":['+str(location[0])+","+str(location[1])+"]}',"+str(distance)+"km)"
-
+        print("Fetching data")
         data = requests.get(
             "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records", {"where":where_string,"limit":100}
         )
+        print("Data fetched")
+
         formated = self.format_data(data.json(),location)
         order = self.sort_data(formated,criteria)
-        
+        print("Data orderer and formatted")
         return Response(order, status=data.status_code)
 
 
